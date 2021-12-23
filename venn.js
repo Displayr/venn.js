@@ -1419,12 +1419,12 @@
                     // d3 4.0 uses 'on' for events on transitions,
                     // but d3 3.0 used 'each' instead. switch appropiately
                     if ('on' in updateText) {
-                        updateText.on("end", wrapText(circles, label));
+                        updateText.on("end", wrapText(circles, label, width));
                     } else {
-                        updateText.each("end", wrapText(circles, label));
+                        updateText.each("end", wrapText(circles, label, width));
                     }
                 } else {
-                    updateText.each(wrapText(circles, label));
+                    updateText.each(wrapText(circles, label, width));
                 }
             }
 
@@ -1541,12 +1541,22 @@
     // also worth checking out is
     // http://engineering.findthebest.com/wrapping-axis-labels-in-d3-js/
     // this seems to be one of those things that should be easy but isn't
-    function wrapText(circles, labeller) {
+    function wrapText(circles, labeller, svgwidth) {
         return function() {
             var text = d3Selection.select(this),
                 data = text.datum(),
                 width = circles[data.sets[0]].radius || 50,
                 label = labeller(data) || '';
+
+                // reduce target width of wrapped text to ensure it fits in svg
+                var tmpX = text.attr("x");
+                if (width > tmpX * 0.5) {
+                    width = tmpX * 0.5;
+                }
+                if (width >  (svgwidth - width) * 2)
+                {
+                    width = (svgwidth - tmpX) * 2
+                } 
 
                 var words = label.split(/\s+/).reverse(),
                 maxLines = 3,
