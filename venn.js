@@ -1550,11 +1550,10 @@
 
                 // reduce target width of wrapped text to ensure it fits in svg
                 var tmpX = text.attr("x");
-                if (width > tmpX * 0.5) {
-                    width = tmpX * 0.5;
+                if (width > tmpX * 2) {
+                    width = tmpX * 2;
                 }
-                if (width >  (svgwidth - width) * 2)
-                {
+                if (width > (svgwidth - tmpX) * 2) {
                     width = (svgwidth - tmpX) * 2
                 } 
 
